@@ -2,6 +2,7 @@ package com.example;
 
 
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.annotation.BootstrapContextCompatible;
 import io.micronaut.context.env.Environment;
 import io.micronaut.context.env.PropertySource;
 import io.micronaut.discovery.config.ConfigurationClient;
@@ -12,12 +13,17 @@ import javax.inject.Singleton;
 
 
 @Singleton
+@BootstrapContextCompatible
+@RequiresTestPropertySource
 public class TestPropertySource implements ConfigurationClient
 {
-    public TestPropertySource(ApplicationContext applicationContext)
+    private TestPropertySourceConfiguration config;
+
+    public TestPropertySource(TestPropertySourceConfiguration config)
     {
-        System.out.println(applicationContext.getEnvironment().getPropertySources());
+        this.config = config;
     }
+
     @Override
     public Publisher<PropertySource> getPropertySources(Environment environment)
     {
@@ -27,6 +33,6 @@ public class TestPropertySource implements ConfigurationClient
     @Override
     public String getDescription()
     {
-        return "Test Test Test";
+        return config.getTestValue();
     }
 }
